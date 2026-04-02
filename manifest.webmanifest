@@ -2,8 +2,8 @@
   "name": "School Finder HK - Hong Kong School Information",
   "short_name": "School Finder HK",
   "description": "Browse and search Hong Kong school information, compare schools, and find contact details easily on mobile.",
-  "start_url": "/MobileAPP/index.html",
-  "scope": "/MobileAPP/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#ffffff",
@@ -42,7 +42,7 @@
       "name": "Search Schools",
       "short_name": "Search",
       "description": "Quickly search for schools in Hong Kong",
-      "url": "./school-info-pwa.html?tab=search",
+      "url": "./index.html?tab=search",
       "icons": [
         {
           "src": "./icon.svg",
