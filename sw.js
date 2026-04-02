@@ -2,7 +2,7 @@ const CACHE_NAME = 'school-finder-v1';
 const BASE_PATH = '/MobileAPP';
 const ASSETS_TO_CACHE = [
   BASE_PATH + '/',
-  BASE_PATH + '/school-info-pwa.html',
+  BASE_PATH + '/index.html',
   BASE_PATH + '/manifest.webmanifest',
   BASE_PATH + '/icon.svg'
 ];
@@ -98,7 +98,7 @@ self.addEventListener('fetch', event => {
           .catch(() => {
             // Return offline page or fallback
             if (request.destination === 'document') {
-              return caches.match(BASE_PATH + '/school-info-pwa.html');
+              return caches.match(BASE_PATH + '/index.html');
             }
             return new Response('Offline - resource not available', {
               status: 503,
