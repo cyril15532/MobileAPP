@@ -1,0 +1,55 @@
+{
+  "name": "School Finder HK - Hong Kong School Information",
+  "short_name": "School Finder HK",
+  "description": "Browse and search Hong Kong school information, compare schools, and find contact details easily on mobile.",
+  "start_url": "/MobileAPP/school-info-pwa.html",
+  "scope": "/MobileAPP/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#0f766e",
+  "categories": ["education", "reference"],
+  "screenshots": [
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Search Schools",
+      "short_name": "Search",
+      "description": "Quickly search for schools in Hong Kong",
+      "url": "./school-info-pwa.html?tab=search",
+      "icons": [
+        {
+          "src": "./icon.svg",
+          "sizes": "192x192",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}

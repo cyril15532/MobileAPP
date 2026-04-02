@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=yes" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="description" content="School Finder HK - a Progressive Web App for browsing Hong Kong school information." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="School Finder HK" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="theme-color" content="#0f766e" media="(prefers-color-scheme: light)" />
+  <title>School Finder HK PWA</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <link rel="shortcut icon" href="./icon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: #eef4f7;
+      --text: #172033;
+      --muted: #61708a;
+      --primary: #0f766e;
+      --primary-2: #115e59;
+      --accent: #0ea5e9;
+      --danger: #be123c;
+      --border: #dbe5ef;
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --max: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #ecfeff 0%, var(--bg) 20%, #f8fafc 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .app-shell {
+      width: min(calc(100% - 24px), var(--max));
+      margin: 0 auto;
+      padding: 16px 0 96px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(15,118,110,0.98), rgba(14,165,233,0.92));
+      color: white;
+      border-radius: 28px;
+      padding: 24px;
+      margin-top: 12px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -60px -70px auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255,255,255,0.35), rgba(255,255,255,0));
+      border-radius: 50%;
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.18);
+      display: grid;
+      place-items: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      font-size: 20px;
+    }
+
+    .install-btn, .ghost-btn, .primary-btn, .danger-btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 16px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .2s ease, opacity .2s ease, background .2s ease;
+    }
+
+    .install-btn:hover, .ghost-btn:hover, .primary-btn:hover, .danger-btn:hover { transform: translateY(-1px); }
+    .install-btn:active, .ghost-btn:active, .primary-btn:active, .danger-btn:active { transform: translateY(0); }
+
+    .install-btn {
+      background: white;
+      color: var(--primary-2);
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 1.3rem + 2vw, 3.2rem);
+      margin: 20px 0 10px;
+      line-height: 1.05;
+      max-width: 12ch;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 60ch;
+      color: rgba(255,255,255,0.92);
+      line-height: 1.6;
+    }
+
+    .stats {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 18px;
+      padding: 14px;
+      backdrop-filter: blur(8px);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 18px;
+      margin-top: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .filters {
+      padding: 18px;
+      position: sticky;
+      top: 12px;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 1.1rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 14px;
+      background: #fff;
+      color: var(--text);
+      min-height: 46px;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(14,165,233,0.14);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+    }
+
+    .ghost-btn {
+      background: var(--surface-2);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .danger-btn {
+      background: #ffe4e6;
+      color: var(--danger);
+      font-weight: 700;
+      width: 100%;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 999px;
+      padding: 10px 12px;
+      min-height: 40px;
+    }
+
+    .results {
+      display: grid;
+      gap: 14px;
+    }
+
+    .toolbar {
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toolbar-left h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .toolbar-left p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .list-wrap { padding: 16px; }
+
+    .school-card {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 16px;
+      background: linear-gradient(180deg, #ffffff, #fbfdff);
+      display: grid;
+      gap: 12px;
+    }
+
+    .school-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 12px;
+    }
+
+    .school-name {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.3;
+    }
+
+    .school-meta, .detail-grid small, .footnote {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #ecfeff;
+      color: #0f766e;
+      font-size: 0.86rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .detail-box {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      border-radius: 16px;
+      padding: 12px;
+      min-height: 82px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .card-actions button, .card-actions a {
+      min-height: 42px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: white;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .card-actions .filled {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .compare-panel {
+      margin-top: 16px;
+      padding: 16px;
+    }
+
+    .compare-table {
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 560px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 36px 18px;
+      color: var(--muted);
+    }
+
+    .status-bar {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 0.92rem;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(120%);
+      background: #111827;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      z-index: 20;
+      transition: transform .25s ease;
+      max-width: calc(100vw - 24px);
+      text-align: center;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    dialog {
+      width: min(720px, calc(100vw - 24px));
+      border: 0;
+      border-radius: 24px;
+      padding: 0;
+      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.24);
+    }
+
+    dialog::backdrop { background: rgba(15,23,42,.54); }
+
+    .modal-head, .modal-body {
+      padding: 18px;
+    }
+
+    .modal-head {
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      padding: 16px 18px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .loader {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.35);
+      border-top-color: white;
+      animation: spin .9s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .filters { position: static; }
+    }
+
+    @media (max-width: 640px) {
+      .app-shell { width: min(calc(100% - 16px), var(--max)); }
+      .hero { padding: 18px; border-radius: 24px; }
+      .school-head { flex-direction: column; }
+      .actions { grid-template-columns: 1fr; }
+      .toolbar { align-items: start; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div class="hero-top">
+        <div class="brand">
+          <div class="brand-badge">🏫</div>
+          <div>
+            <div>School Finder HK</div>
+            <small style="opacity:.88;">COMP 3130SEF Mobile Application Project</small>
+          </div>
+        </div>
+        <button id="installBtn" class="install-btn" hidden>Install app</button>
+      </div>
+
+      <h1>Search schools faster on mobile.</h1>
+      <p>
+        Browse Hong Kong school records, filter by school name, district, and category, compare schools side by side, and install the app on Android or iPhone as a PWA.
+      </p>
+
+      <div class="status-bar">
+        <div class="status-pill"><span id="onlineDot">🟢</span><span id="onlineText">Online</span></div>
+        <div class="status-pill">Source: EDB School Location and Information</div>
+        <div class="status-pill" id="cacheStatus">Offline cache ready after first load</div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><strong id="totalCount">0</strong><span>Total schools</span></div>
+        <div class="stat"><strong id="filteredCount">0</strong><span>Filtered results</span></div>
+        <div class="stat"><strong id="districtCount">0</strong><span>Districts found</span></div>
+        <div class="stat"><strong id="compareCount">0</strong><span>Compared items</span></div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <aside class="panel filters">
+        <h2 class="section-title">Filters</h2>
+
+        <div class="field">
+          <label for="searchInput">Search school name</label>
+          <input id="searchInput" type="search" placeholder="e.g. Maryknoll, St. Paul's" />
+        </div>
+
+        <div class="field">
+          <label for="districtSelect">District</label>
+          <select id="districtSelect">
+            <option value="">All districts</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="typeSelect">School type</label>
+          <select id="typeSelect">
+            <option value="">All types</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="sortSelect">Sort by</label>
+          <select id="sortSelect">
+            <option value="name">School name</option>
+            <option value="district">District</option>
+            <option value="type">School type</option>
+          </select>
+        </div>
+
+        <div class="actions">
+          <button class="primary-btn" id="loadBtn">Load data</button>
+          <button class="ghost-btn" id="resetBtn">Reset</button>
+        </div>
+
+        <div class="chips">
+          <button class="chip" data-quick="Primary">Primary</button>
+          <button class="chip" data-quick="Secondary">Secondary</button>
+          <button class="chip" data-quick="Kindergarten">Kindergarten</button>
+          <button class="chip" data-quick="International">International</button>
+        </div>
+
+        <div style="margin-top:16px; display:grid; gap:10px;">
+          <button class="ghost-btn" id="sampleBtn">Load sample data</button>
+          <button class="danger-btn" id="clearCompareBtn">Clear compare list</button>
+        </div>
+
+        <p class="footer-note">
+          Tip: if the remote JSON blocks browser access because of mixed-content or CORS rules, press “Load sample data” for demonstration, or replace the API URL in the code with a local JSON copy.
+        </p>
+      </aside>
+
+      <section class="results panel">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <h2>School records</h2>
+            <p id="statusText">Press “Load data” to request the API.</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="ghost-btn" id="retryBtn">Retry API</button>
+            <button class="ghost-btn" id="exportBtn">Export compare list</button>
+          </div>
+        </div>
+
+        <div class="list-wrap">
+          <div id="loadingState" class="empty" hidden>
+            <div style="display:grid; place-items:center; gap:10px;">
+              <div class="loader"></div>
+              <div>Loading school data...</div>
+            </div>
+          </div>
+          <div id="resultList"></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel compare-panel">
+      <div class="toolbar" style="padding:0 0 14px; border:0;">
+        <div class="toolbar-left">
+          <h2>Compare selected schools</h2>
+          <p>Add up to 3 schools from the result list.</p>
+        </div>
+      </div>
+      <div class="compare-table" id="compareArea">
+        <div class="empty">No schools selected for comparison yet.</div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="detailDialog">
+    <div class="modal-head">
+      <div>
+        <h2 id="modalTitle" style="margin:0 0 4px;"></h2>
+        <div id="modalSubtitle" class="school-meta"></div>
+      </div>
+      <button class="icon-btn" id="closeDialogBtn" aria-label="Close dialog">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </dialog>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API_ENDPOINTS = [
+      'https://www.edb.gov.hk/attachment/en/student-parents/sch-info/sch-search/sch-location-info/SCH_LOC_EDB.json',
+      'http://www.edb.gov.hk/attachment/en/student-parents/sch-info/sch-search/sch-location-info/SCH_LOC_EDB.json'
+    ];
+
+    const SAMPLE_DATA = [
+      {
+        "School Name": "ABC Primary School",
+        "District": "Central and Western",
+        "School Type": "Primary",
+        "Address": "1 Harbour View Road, Hong Kong",
+        "Telephone": "2525 1111",
+        "Email": "info@abcprimary.edu.hk",
+        "Website": "https://example.edu.hk/abc-primary",
+        "Latitude": 22.2819,
+        "Longitude": 114.1589,
+        "Remarks": "Sample record for testing"
+      },
+      {
+        "School Name": "Victoria Secondary School",
+        "District": "Wan Chai",
+        "School Type": "Secondary",
+        "Address": "18 Queen's Road East, Hong Kong",
+        "Telephone": "2890 2222",
+        "Email": "hello@victoriass.edu.hk",
+        "Website": "https://example.edu.hk/victoria-secondary",
+        "Latitude": 22.2767,
+        "Longitude": 114.1757,
+        "Remarks": "Sample record for testing"
+      },
+      {
+        "School Name": "Harbour International School",
+        "District": "Southern",
+        "School Type": "International",
+        "Address": "88 Repulse Bay Road, Hong Kong",
+        "Telephone": "2813 3333",
+        "Email": "contact@harbouris.edu.hk",
+        "Website": "https://example.edu.hk/harbour-international",
+        "Latitude": 22.2381,
+        "Longitude": 114.1953,
+        "Remarks": "Sample record for testing"
+      },
+      {
+        "School Name": "Little Star Kindergarten",
+        "District": "Yuen Long",
+        "School Type": "Kindergarten",
+        "Address": "6 Castle Peak Road, Yuen Long",
+        "Telephone": "2470 4444",
+        "Email": "admission@littlestar.edu.hk",
+        "Website": "https://example.edu.hk/little-star",
+        "Latitude": 22.4456,
+        "Longitude": 114.0222,
+        "Remarks": "Sample record for testing"
+      }
+    ];
+
+    const state = {
+      allSchools: [],
+      filteredSchools: [],
+      compare: [],
+      deferredPrompt: null,
+      lastSource: 'none'
+    };
+
+    const el = {
+      searchInput: document.getElementById('searchInput'),
+      districtSelect: document.getElementById('districtSelect'),
+      typeSelect: document.getElementById('typeSelect'),
+      sortSelect: document.getElementById('sortSelect'),
+      loadBtn: document.getElementById('loadBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      resultList: document.getElementById('resultList'),
+      statusText: document.getElementById('statusText'),
+      totalCount: document.getElementById('totalCount'),
+      filteredCount: document.getElementById('filteredCount'),
+      districtCount: document.getElementById('districtCount'),
+      compareCount: document.getElementById('compareCount'),
+      compareArea: document.getElementById('compareArea'),
+      clearCompareBtn: document.getElementById('clearCompareBtn'),
+      exportBtn: document.getElementById('exportBtn'),
+      retryBtn: document.getElementById('retryBtn'),
+      sampleBtn: document.getElementById('sampleBtn'),
+      installBtn: document.getElementById('installBtn'),
+      loadingState: document.getElementById('loadingState'),
+      detailDialog: document.getElementById('detailDialog'),
+      modalTitle: document.getElementById('modalTitle'),
+      modalSubtitle: document.getElementById('modalSubtitle'),
+      modalBody: document.getElementById('modalBody'),
+      closeDialogBtn: document.getElementById('closeDialogBtn'),
+      onlineText: document.getElementById('onlineText'),
+      onlineDot: document.getElementById('onlineDot'),
+      cacheStatus: document.getElementById('cacheStatus'),
+      chips: [...document.querySelectorAll('.chip')]
+    };
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function getValue(record, candidates = []) {
+      const normalizedMap = new Map();
+      Object.keys(record || {}).forEach(key => {
+        normalizedMap.set(key.toLowerCase().replace(/[^a-z0-9]/g, ''), record[key]);
+      });
+      for (const candidate of candidates) {
+        const key = candidate.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (normalizedMap.has(key) && normalizedMap.get(key) !== '') return normalizedMap.get(key);
+      }
+      return '';
+    }
+
+    function normalizeRecord(raw, index) {
+      const name = getValue(raw, ['School Name','Name of School','Eng Name','SchoolName','School']) || `School ${index + 1}`;
+      const district = getValue(raw, ['District','District Name','District English']) || 'Unknown';
+      const type = getValue(raw, ['School Type','Type','School Category','Category']) || 'Unknown';
+      const address = getValue(raw, ['Address','School Address','Address English']) || 'N/A';
+      const phone = getValue(raw, ['Telephone','Tel','Phone']) || 'N/A';
+      const email = getValue(raw, ['Email','E-mail']) || 'N/A';
+      const website = getValue(raw, ['Website','Web Site','Homepage','URL']) || '';
+      const lat = parseFloat(getValue(raw, ['Latitude','Lat','Y']));
+      const lng = parseFloat(getValue(raw, ['Longitude','Lng','Long','X']));
+      const remarks = getValue(raw, ['Remarks','Comment','Note']) || '';
+      return {
+        id: `${name}-${district}-${index}`.replace(/\s+/g, '-').toLowerCase(),
+        name,
+        district,
+        type,
+        address,
+        phone,
+        email,
+        website,
+        latitude: Number.isFinite(lat) ? lat : null,
+        longitude: Number.isFinite(lng) ? lng : null,
+        remarks,
+        raw
+      };
+    }
+
+    function uniqueValues(arr, key) {
+      return [...new Set(arr.map(item => item[key]).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b)));
+    }
+
+    function updateStats() {
+      el.totalCount.textContent = state.allSchools.length;
+      el.filteredCount.textContent = state.filteredSchools.length;
+      el.districtCount.textContent = uniqueValues(state.allSchools, 'district').length;
+      el.compareCount.textContent = state.compare.length;
+    }
+
+    function populateFilters() {
+      const districts = uniqueValues(state.allSchools, 'district');
+      const types = uniqueValues(state.allSchools, 'type');
+
+      el.districtSelect.innerHTML = '<option value="">All districts</option>' + districts.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+      el.typeSelect.innerHTML = '<option value="">All types</option>' + types.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+    }
+
+    function applyFilters() {
+      const term = el.searchInput.value.trim().toLowerCase();
+      const district = el.districtSelect.value;
+      const type = el.typeSelect.value;
+      const sortBy = el.sortSelect.value;
+
+      let filtered = [...state.allSchools].filter(item => {
+        const matchText = !term || [item.name, item.district, item.type, item.address].join(' ').toLowerCase().includes(term);
+        const matchDistrict = !district || item.district === district;
+        const matchType = !type || item.type === type;
+        return matchText && matchDistrict && matchType;
+      });
+
+      filtered.sort((a, b) => String(a[sortBy] || '').localeCompare(String(b[sortBy] || '')));
+      state.filteredSchools = filtered;
+      updateStats();
+      renderList();
+    }
+
+    function renderList() {
+      if (!state.filteredSchools.length) {
+        el.resultList.innerHTML = '<div class="empty">No schools match the current filters.</div>';
+        return;
+      }
+
+      el.resultList.innerHTML = state.filteredSchools.map(school => {
+        const mapLink = school.latitude && school.longitude
+          ? `https://www.google.com/maps/search/?api=1&query=${school.latitude},${school.longitude}`
+          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(school.address)}`;
+
+        const compared = state.compare.some(item => item.id === school.id);
+
+        return `
+          <article class="school-card">
+            <div class="school-head">
+              <div>
+                <h3 class="school-name">${escapeHtml(school.name)}</h3>
+                <div class="school-meta">${escapeHtml(school.district)} · ${escapeHtml(school.type)}</div>
+              </div>
+              <div class="badge">📍 ${escapeHtml(school.district)}</div>
+            </div>
+
+            <div class="detail-grid">
+              <div class="detail-box">
+                <small>Address</small>
+                <div>${escapeHtml(school.address)}</div>
+              </div>
+              <div class="detail-box">
+                <small>Telephone</small>
+                <div>${escapeHtml(school.phone)}</div>
+              </div>
+              <div class="detail-box">
+                <small>Email</small>
+                <div>${escapeHtml(school.email)}</div>
+              </div>
+              <div class="detail-box">
+                <small>Website</small>
+                <div>${school.website ? `<a href="${escapeHtml(school.website)}" target="_blank" rel="noopener noreferrer">Open school site</a>` : 'N/A'}</div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button class="filled" data-action="details" data-id="${school.id}">View details</button>
+              <button data-action="compare" data-id="${school.id}">${compared ? 'Remove compare' : 'Add compare'}</button>
+              <a href="${mapLink}" target="_blank" rel="noopener noreferrer">Open map</a>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderCompare() {
+      if (!state.compare.length) {
+        el.compareArea.innerHTML = '<div class="empty">No schools selected for comparison yet.</div>';
+        updateStats();
+        return;
+      }
+
+      const rows = [
+        ['School', 'name'],
+        ['District', 'district'],
+        ['Type', 'type'],
+        ['Address', 'address'],
+        ['Telephone', 'phone'],
+        ['Email', 'email'],
+        ['Website', 'website']
+      ];
+
+      el.compareArea.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              ${state.compare.map(item => `<th>${escapeHtml(item.name)}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(([label, key]) => `
+              <tr>
+                <th>${label}</th>
+                ${state.compare.map(item => `<td>${key === 'website' && item.website ? `<a href="${escapeHtml(item.website)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.website)}</a>` : escapeHtml(item[key] || 'N/A')}</td>`).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      updateStats();
+      renderList();
+    }
+
+    function toggleCompare(id) {
+      const school = state.allSchools.find(item => item.id === id);
+      if (!school) return;
+      const exists = state.compare.find(item => item.id === id);
+      if (exists) {
+        state.compare = state.compare.filter(item => item.id !== id);
+        showToast('Removed from compare list.');
+      } else {
+        if (state.compare.length >= 3) {
+          showToast('You can compare up to 3 schools only.');
+          return;
+        }
+        state.compare = [...state.compare, school];
+        showToast('Added to compare list.');
+      }
+      renderCompare();
+    }
+
+    function openDetails(id) {
+      const school = state.allSchools.find(item => item.id === id);
+      if (!school) return;
+      el.modalTitle.textContent = school.name;
+      el.modalSubtitle.textContent = `${school.district} · ${school.type}`;
+      const mapSection = school.latitude && school.longitude
+        ? `<p><strong>Coordinates:</strong> ${school.latitude}, ${school.longitude}</p>`
+        : '';
+      const rawPreview = Object.entries(school.raw).slice(0, 12).map(([k, v]) => `<div class="detail-box"><small>${escapeHtml(k)}</small><div>${escapeHtml(v)}</div></div>`).join('');
+      el.modalBody.innerHTML = `
+        <div style="display:grid; gap:14px;">
+          <div class="detail-grid">
+            <div class="detail-box"><small>Address</small><div>${escapeHtml(school.address)}</div></div>
+            <div class="detail-box"><small>Telephone</small><div>${escapeHtml(school.phone)}</div></div>
+            <div class="detail-box"><small>Email</small><div>${escapeHtml(school.email)}</div></div>
+            <div class="detail-box"><small>Website</small><div>${school.website ? `<a href="${escapeHtml(school.website)}" target="_blank" rel="noopener noreferrer">${escapeHtml(school.website)}</a>` : 'N/A'}</div></div>
+          </div>
+          ${mapSection}
+          ${school.remarks ? `<p><strong>Remarks:</strong> ${escapeHtml(school.remarks)}</p>` : ''}
+          <div>
+            <h3 style="margin:0 0 10px;">Raw data preview</h3>
+            <div class="detail-grid">${rawPreview}</div>
+          </div>
+        </div>
+      `;
+      el.detailDialog.showModal();
+    }
+
+    async function loadData(useSample = false) {
+      el.loadingState.hidden = false;
+      el.resultList.innerHTML = '';
+
+      try {
+        let data;
+        if (useSample) {
+          data = SAMPLE_DATA;
+          state.lastSource = 'sample';
+        } else {
+          let lastError;
+          for (const endpoint of API_ENDPOINTS) {
+            try {
+              const response = await fetch(endpoint, { cache: 'no-store' });
+              if (!response.ok) throw new Error(`HTTP ${response.status}`);
+              data = await response.json();
+              state.lastSource = endpoint;
+              break;
+            } catch (err) {
+              lastError = err;
+            }
+          }
+          if (!data) throw lastError || new Error('Failed to load API');
+        }
+
+        const rows = Array.isArray(data) ? data : Array.isArray(data?.result?.records) ? data.result.records : [];
+        state.allSchools = rows.map(normalizeRecord).filter(item => item.name);
+        populateFilters();
+        applyFilters();
+        renderCompare();
+        el.statusText.textContent = `Loaded ${state.allSchools.length} schools from ${state.lastSource === 'sample' ? 'sample data' : 'the API'}.`;
+        showToast('School data loaded successfully.');
+      } catch (error) {
+        el.statusText.textContent = 'API request failed. You can still demo the app with sample data.';
+        el.resultList.innerHTML = `<div class="empty">Unable to load the live API.<br><br><span class="footnote">${escapeHtml(error.message || 'Unknown error')}</span></div>`;
+        state.allSchools = [];
+        state.filteredSchools = [];
+        updateStats();
+        showToast('Live API failed. Try sample data.');
+      } finally {
+        el.loadingState.hidden = true;
+      }
+    }
+
+    function exportCompare() {
+      if (!state.compare.length) {
+        showToast('Add at least one school to export.');
+        return;
+      }
+      const blob = new Blob([JSON.stringify(state.compare.map(item => item.raw), null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'compare-schools.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Compare list exported.');
+    }
+
+    function resetFilters() {
+      el.searchInput.value = '';
+      el.districtSelect.value = '';
+      el.typeSelect.value = '';
+      el.sortSelect.value = 'name';
+      applyFilters();
+    }
+
+    function bindEvents() {
+      [el.searchInput, el.districtSelect, el.typeSelect, el.sortSelect].forEach(node => {
+        node.addEventListener('input', applyFilters);
+        node.addEventListener('change', applyFilters);
+      });
+
+      el.loadBtn.addEventListener('click', () => loadData(false));
+      el.retryBtn.addEventListener('click', () => loadData(false));
+      el.sampleBtn.addEventListener('click', () => loadData(true));
+      el.resetBtn.addEventListener('click', resetFilters);
+      el.clearCompareBtn.addEventListener('click', () => {
+        state.compare = [];
+        renderCompare();
+        showToast('Compare list cleared.');
+      });
+      el.exportBtn.addEventListener('click', exportCompare);
+      el.closeDialogBtn.addEventListener('click', () => el.detailDialog.close());
+      el.detailDialog.addEventListener('click', event => {
+        const rect = el.detailDialog.getBoundingClientRect();
+        const inside = rect.top <= event.clientY && event.clientY <= rect.top + rect.height && rect.left <= event.clientX && event.clientX <= rect.left + rect.width;
+        if (!inside) el.detailDialog.close();
+      });
+
+      el.resultList.addEventListener('click', event => {
+        const button = event.target.closest('[data-action]');
+        if (!button) return;
+        const { action, id } = button.dataset;
+        if (action === 'compare') toggleCompare(id);
+        if (action === 'details') openDetails(id);
+      });
+
+      el.chips.forEach(chip => chip.addEventListener('click', () => {
+        const keyword = chip.dataset.quick || '';
+        el.typeSelect.value = [...el.typeSelect.options].find(opt => opt.value.toLowerCase().includes(keyword.toLowerCase()))?.value || '';
+        applyFilters();
+      }));
+    }
+
+    function updateOnlineStatus() {
+      const online = navigator.onLine;
+      el.onlineText.textContent = online ? 'Online' : 'Offline';
+      el.onlineDot.textContent = online ? '🟢' : '🟠';
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      state.deferredPrompt = event;
+      el.installBtn.hidden = false;
+    });
+
+    el.installBtn.addEventListener('click', async () => {
+      if (!state.deferredPrompt) return;
+      state.deferredPrompt.prompt();
+      await state.deferredPrompt.userChoice;
+      state.deferredPrompt = null;
+      el.installBtn.hidden = true;
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try {
+          await navigator.serviceWorker.register('./sw.js', { scope: '/MobileAPP/' });
+          el.cacheStatus.textContent = 'Offline cache enabled';
+        } catch (err) {
+          el.cacheStatus.textContent = 'Service worker registration failed';
+        }
+      });
+    }
+
+    bindEvents();
+    updateOnlineStatus();
+    loadData(true);
+  </script>
+</body>
+</html>
