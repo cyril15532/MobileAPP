@@ -630,7 +630,7 @@
   <script>
     const API_ENDPOINTS = [
       'https://www.edb.gov.hk/attachment/en/student-parents/sch-info/sch-search/sch-location-info/SCH_LOC_EDB.json',
-      'http://www.edb.gov.hk/attachment/en/student-parents/sch-info/sch-search/sch-location-info/SCH_LOC_EDB.json'
+      'https://www.edb.gov.hk/attachment/en/student-parents/sch-info/sch-search/sch-location-info/SCH_LOC_EDB.json'
     ];
 
     const SAMPLE_DATA = [
@@ -753,16 +753,16 @@
     }
 
     function normalizeRecord(raw, index) {
-      const name = getValue(raw, ['School Name','Name of School','Eng Name','SchoolName','School']) || `School ${index + 1}`;
-      const district = getValue(raw, ['District','District Name','District English']) || 'Unknown';
-      const type = getValue(raw, ['School Type','Type','School Category','Category']) || 'Unknown';
-      const address = getValue(raw, ['Address','School Address','Address English']) || 'N/A';
-      const phone = getValue(raw, ['Telephone','Tel','Phone']) || 'N/A';
-      const email = getValue(raw, ['Email','E-mail']) || 'N/A';
-      const website = getValue(raw, ['Website','Web Site','Homepage','URL']) || '';
-      const lat = parseFloat(getValue(raw, ['Latitude','Lat','Y']));
-      const lng = parseFloat(getValue(raw, ['Longitude','Lng','Long','X']));
-      const remarks = getValue(raw, ['Remarks','Comment','Note']) || '';
+      const name = getValue(raw, ['ENGLISH NAME','School Name','Name of School','Eng Name','SchoolName','School']) || `School ${index + 1}`;
+      const district = getValue(raw, ['DISTRICT','District','District Name','District English']) || 'Unknown';
+      const type = getValue(raw, ['ENGLISH CATEGORY','SCHOOL LEVEL','School Type','Type','School Category','Category']) || 'Unknown';
+      const address = getValue(raw, ['ENGLISH ADDRESS','Address','School Address','Address English']) || 'N/A';
+      const phone = getValue(raw, ['TELEPHONE','Telephone','Tel','Phone']) || 'N/A';
+      const email = getValue(raw, ['EMAIL','Email','E-mail']) || 'N/A';
+      const website = getValue(raw, ['WEBSITE','Website','Web Site','Homepage','URL']) || '';
+      const lat = parseFloat(getValue(raw, ['LATITUDE','Latitude','Lat','Y']));
+      const lng = parseFloat(getValue(raw, ['LONGITUDE','Longitude','Lng','Long','X']));
+      const remarks = getValue(raw, ['REMARKS','FINANCE TYPE','Remarks','Comment','Note']) || '';
       return {
         id: `${name}-${district}-${index}`.replace(/\s+/g, '-').toLowerCase(),
         name,
