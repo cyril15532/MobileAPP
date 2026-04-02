@@ -2,7 +2,7 @@
   "name": "School Finder HK - Hong Kong School Information",
   "short_name": "School Finder HK",
   "description": "Browse and search Hong Kong school information, compare schools, and find contact details easily on mobile.",
-  "start_url": "/MobileAPP/school-info-pwa.html",
+  "start_url": "/MobileAPP/index.html",
   "scope": "/MobileAPP/",
   "display": "standalone",
   "orientation": "portrait-primary",
