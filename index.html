@@ -12,10 +12,10 @@
   <meta name="format-detection" content="telephone=no" />
   <meta name="theme-color" content="#0f766e" media="(prefers-color-scheme: light)" />
   <title>School Finder HK PWA</title>
-  <link rel="manifest" href="/MobileAPP/manifest.webmanifest" />
-  <link rel="icon" href="/MobileAPP/icon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/MobileAPP/icon.svg" />
-  <link rel="shortcut icon" href="/MobileAPP/icon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <link rel="shortcut icon" href="./icon.svg" type="image/svg+xml" />
   <style>
     :root {
       --bg: #f4f7fb;
@@ -1073,7 +1073,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', async () => {
         try {
-          await navigator.serviceWorker.register('/MobileAPP/sw.js', { scope: '/MobileAPP/' });
+          await navigator.serviceWorker.register('./sw.js', { scope: './' });
           el.cacheStatus.textContent = 'Offline cache enabled';
         } catch (err) {
           el.cacheStatus.textContent = 'Service worker registration failed';
