@@ -1,10 +1,9 @@
 const CACHE_NAME = 'school-finder-v1';
-const BASE_PATH = '/MobileAPP';
 const ASSETS_TO_CACHE = [
-  BASE_PATH + '/',
-  BASE_PATH + '/index.html',
-  BASE_PATH + '/manifest.webmanifest',
-  BASE_PATH + '/icon.svg'
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './icon.svg'
 ];
 
 // Install event: cache essential assets
@@ -98,7 +97,7 @@ self.addEventListener('fetch', event => {
           .catch(() => {
             // Return offline page or fallback
             if (request.destination === 'document') {
-              return caches.match(BASE_PATH + '/index.html');
+              return caches.match('./index.html');
             }
             return new Response('Offline - resource not available', {
               status: 503,
