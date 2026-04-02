@@ -640,7 +640,6 @@
         "School Type": "Primary",
         "Address": "1 Harbour View Road, Hong Kong",
         "Telephone": "2525 1111",
-        "Email": "info@abcprimary.edu.hk",
         "Website": "https://example.edu.hk/abc-primary",
         "Latitude": 22.2819,
         "Longitude": 114.1589,
@@ -652,7 +651,6 @@
         "School Type": "Secondary",
         "Address": "18 Queen's Road East, Hong Kong",
         "Telephone": "2890 2222",
-        "Email": "hello@victoriass.edu.hk",
         "Website": "https://example.edu.hk/victoria-secondary",
         "Latitude": 22.2767,
         "Longitude": 114.1757,
@@ -664,7 +662,6 @@
         "School Type": "International",
         "Address": "88 Repulse Bay Road, Hong Kong",
         "Telephone": "2813 3333",
-        "Email": "contact@harbouris.edu.hk",
         "Website": "https://example.edu.hk/harbour-international",
         "Latitude": 22.2381,
         "Longitude": 114.1953,
@@ -676,7 +673,6 @@
         "School Type": "Kindergarten",
         "Address": "6 Castle Peak Road, Yuen Long",
         "Telephone": "2470 4444",
-        "Email": "admission@littlestar.edu.hk",
         "Website": "https://example.edu.hk/little-star",
         "Latitude": 22.4456,
         "Longitude": 114.0222,
@@ -758,7 +754,6 @@
       const type = getValue(raw, ['ENGLISH CATEGORY','SCHOOL LEVEL','School Type','Type','School Category','Category']) || 'Unknown';
       const address = getValue(raw, ['ENGLISH ADDRESS','Address','School Address','Address English']) || 'N/A';
       const phone = getValue(raw, ['TELEPHONE','Telephone','Tel','Phone']) || 'N/A';
-      const email = getValue(raw, ['EMAIL','Email','E-mail']) || 'N/A';
       const website = getValue(raw, ['WEBSITE','Website','Web Site','Homepage','URL']) || '';
       const lat = parseFloat(getValue(raw, ['LATITUDE','Latitude','Lat','Y']));
       const lng = parseFloat(getValue(raw, ['LONGITUDE','Longitude','Lng','Long','X']));
@@ -770,7 +765,6 @@
         type,
         address,
         phone,
-        email,
         website,
         latitude: Number.isFinite(lat) ? lat : null,
         longitude: Number.isFinite(lng) ? lng : null,
@@ -850,10 +844,6 @@
                 <div>${escapeHtml(school.phone)}</div>
               </div>
               <div class="detail-box">
-                <small>Email</small>
-                <div>${escapeHtml(school.email)}</div>
-              </div>
-              <div class="detail-box">
                 <small>Website</small>
                 <div>${school.website ? `<a href="${escapeHtml(school.website)}" target="_blank" rel="noopener noreferrer">Open school site</a>` : 'N/A'}</div>
               </div>
@@ -882,7 +872,6 @@
         ['Type', 'type'],
         ['Address', 'address'],
         ['Telephone', 'phone'],
-        ['Email', 'email'],
         ['Website', 'website']
       ];
 
@@ -940,7 +929,6 @@
           <div class="detail-grid">
             <div class="detail-box"><small>Address</small><div>${escapeHtml(school.address)}</div></div>
             <div class="detail-box"><small>Telephone</small><div>${escapeHtml(school.phone)}</div></div>
-            <div class="detail-box"><small>Email</small><div>${escapeHtml(school.email)}</div></div>
             <div class="detail-box"><small>Website</small><div>${school.website ? `<a href="${escapeHtml(school.website)}" target="_blank" rel="noopener noreferrer">${escapeHtml(school.website)}</a>` : 'N/A'}</div></div>
           </div>
           ${mapSection}
